@@ -1,0 +1,189 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AFK Trader infrastructure
+Resources:
+  # Secrets Manager API KEY ID
+  ApiKey:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: "Stores the Alpaca API key ID in secrets manager"
+      Name: "API_KEY_ID"
+      SecretString: "YOUR-API-KEY-ID"
+      Tags:
+        - Key: name
+          Value: API KEY ID
+
+  # Secrets Manager API SECRET
+  ApiSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: "Stores the Alpaca API key ID in secrets manager"
+      Name: "API_SECRET"
+      SecretString: "YOUR-SECRET-API-KEY"
+      Tags:
+        - Key: name
+          Value: API KEY ID
+  # VPC
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      Tags:
+        - Key: name
+          Value: VPC
+
+  # Internet Gateway
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: name
+          Value: IGW
+
+  # Gateway Attachment
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref IGW
+      VpcId: !Ref VPC
+
+  # IGW-PublicSubnet Route
+  IGWPublicSubnetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+
+  # Public Route Table Association
+  PublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+
+  # Public Route Table
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: name
+          Value: Public-Route-Table
+
+  # Public subnet
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.128/26
+      AvailabilityZone: us-east-1a
+      VpcId: !Ref VPC
+      Tags:
+        - Key: name
+          Value: Public-Subnet
+
+  # EIP for NATGW
+  EIP:
+    Type: AWS::EC2::EIP
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      Domain: VPC
+      Tags:
+        - Key: name
+          Value: NATGW-EIP
+
+  # Nat Gateway
+  NATGW:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - EIP
+          - AllocationId
+      SubnetId: !Ref PublicSubnet
+
+  # NATGW - Private Route Table Route
+  NATGWPrivateRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGW
+
+  # Private Route table Association
+  PrivateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet
+
+  # Private Route Table
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: name
+          Value: Private-Route-Table
+
+  # Private subnet
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.192/26
+      AvailabilityZone: us-east-1b
+      VpcId: !Ref VPC
+      Tags:
+        - Key: name
+          Value: Private-Subnet
+
+  # Instance Profile
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    DependsOn: IAMRole
+    Properties:
+      Roles:
+        - 'IAMRole4Ec2S3Access'
+
+  # IAM Role for SSm and S3 Access
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'IAMRole4Ec2S3Access'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+
+  # EC2 instance for Alpaca Bot
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn: InstanceProfile
+    Properties:
+      ImageId: ami-04902260ca3d33422
+      AvailabilityZone: us-east-1b
+      InstanceType: t2.micro
+      IamInstanceProfile: !Ref InstanceProfile
+      PrivateIpAddress: 10.0.0.201
+      KeyName: final-project
+      SubnetId: !Ref PrivateSubnet
+      UserData:
+        !Base64 |
+          #!/bin/bash
+          yum update -y
+          sudo yum install -y https://s3.us-east-1.amazonaws.com/amazon-ssm-us-east-1/latest/linux_amd64/amazon-ssm-agent.rpm
+          sudo mkdir /usr/bin/bot
+          cd bot
+          sudo aws s3 cp s3://afk-trader/main.py main.py
+          python main.py
+      Tags:
+        - Key: name
+          Value: EC2-Instance

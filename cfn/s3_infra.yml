@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AFK Trader s3 bucket
+Resources:
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "afk-trader"
+      VersioningConfiguration:
+        Status: "Enabled"
