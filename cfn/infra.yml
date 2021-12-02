@@ -208,6 +208,3 @@ Resources:
       Tags:
         - Key: name
           Value: EC2-Instance
-#           sudo yum groupinstall "Development Tools"
-# python3 main.py
-  #sudo yum search python3 | grep devel
