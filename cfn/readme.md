@@ -1,5 +1,7 @@
 # Instructions for Deployment:
 
+This architetcure was designed with crypto in mind. Which means this architecture was built to run 24hrs 7 days per week. THIS IS NOT SOMETHING WHICH CAN BE RUN FOR FREE. YOU WILL INCUR AWS CHARGES.
+
 ### Step 1:
 - Clone the repo
 
@@ -28,5 +30,3 @@
 - Sign in to the AWS console
 - Go to the CloudFormation console
 - Deploy infra.yml
-
-
