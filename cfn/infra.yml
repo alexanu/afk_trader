@@ -171,7 +171,7 @@ Resources:
     Properties:
       ImageId: ami-0ed9277fb7eb570c9
       AvailabilityZone: us-east-1b
-      InstanceType: t2.micro
+      InstanceType: t3.xlarge
       IamInstanceProfile: !Ref InstanceProfile
       PrivateIpAddress: 10.0.0.201
       KeyName: final-project
