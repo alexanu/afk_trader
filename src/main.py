@@ -80,7 +80,7 @@ class AfkTrader:
         self.mess = json.loads(message)
 
         Strategy().rsi_indicator(
-            RSI_PERIOD=14, RSI_OVERBOUGHT=50, RSI_OVERSOLD=50, message=self.mess
+            RSI_PERIOD=14, RSI_OVERBOUGHT=70, RSI_OVERSOLD=30, message=self.mess
         )
 
 
