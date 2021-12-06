@@ -154,6 +154,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
         - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/SecretsManagerReadWrite
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -203,7 +204,7 @@ Resources:
           cd ..
           sudo pip3 install TA-Lib
           cd bot
-          sudo aws s3 cp s3://afk-trader/main.py /usr/bin/bot/main.py
+          sudo aws s3 cp s3://afk-trader/src /usr/bin/bot/ --recursive
           python3 /usr/bin/bot/main.py
       Tags:
         - Key: name
