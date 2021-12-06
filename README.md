@@ -8,3 +8,9 @@
 
 # afk_trader
  If you'd like to replicate this project head over to the readme.md in the cfn directory
+ 
+ 
+ ## Architecture
+![](architecture_diagram.png)
+
+Streaming Data is sourced from the Alpaca Trade markets (https://alpaca.markets/) containing information on particular stocks (In this case, Bitcoin). A python file residing on an EC2 instance continuously pulls the data via the data from the alpaca trade api and orchestrates buy/sell orders based upon a simple RSI strategy.
