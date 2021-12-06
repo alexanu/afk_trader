@@ -4,6 +4,16 @@ from strategies import Strategy
 import boto3
 
 
+def get_secret_api_token(token_name):
+    """
+    Accesses AWS Secrets Manager and retrieves the secret token names for the API
+    :return: secret token values
+    """
+    client = boto3.client("secretsmanager", region_name="us-east-1")
+    response = client.get_secret_value(SecretId=token_name)
+    return response["SecretString"]
+
+
 class AfkTrader:
     def __init__(self, base_url, socket, api_key, api_secret, symbol):
         self.base_url = base_url
@@ -85,15 +95,6 @@ class AfkTrader:
 
 
 if __name__ == "__main__":
-
-    def get_secret_api_token(token_name):
-        """
-        Accesses AWS Secrets Manager and retrieves the secret token names for the API
-        :return: secret token values
-        """
-        client = boto3.client("secretsmanager", region_name="us-east-1")
-        response = client.get_secret_value(SecretId=token_name)
-        return response["SecretString"]
 
     bot = AfkTrader(
         base_url="https://paper-api.alpaca.markets",  # paper API
