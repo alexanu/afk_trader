@@ -6,7 +6,9 @@
 
 
 
-# afk_trader
+# Afk Trader
+An automated trading bot built on top of the Alpaca API. Completly hosted in the AWS ecosystem with a quick and easy CloudFormation deployment.
+
  If you'd like to replicate this project head over to the readme.md in the cfn directory
  
  
