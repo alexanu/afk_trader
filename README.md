@@ -13,4 +13,4 @@
  ## Architecture
 ![](architecture.png)
 
-Streaming Data is sourced from the Alpaca Trade markets (https://alpaca.markets/) containing information on particular stocks (In this case, Bitcoin). A python file residing on an EC2 instance continuously pulls the data via the data from the alpaca trade api and orchestrates buy/sell orders based upon a simple RSI strategy.
+Streaming Data is sourced from the Alpaca Trade markets (https://alpaca.markets/) containing information on particular stocks (In this case, Bitcoin). A python file residing on an EC2 instance continuously pulls the data via the alpaca trade api and orchestrates buy/sell orders based upon a simple RSI strategy.
