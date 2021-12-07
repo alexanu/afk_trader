@@ -1,6 +1,5 @@
-import alpaca_trade_api as tradeapi
 import websocket, json
-from strategies import Strategy
+from strategies import *
 import boto3
 
 
@@ -27,32 +26,6 @@ class AfkTrader:
             base_url=self.base_url,
             api_version="v2",
         )
-
-    def order(self, side, qty, type, time_in_force, limit_price=None):
-        """
-        The order method to implment the buy/sell functionality of Afk Trader
-        :param side: buy or sell
-        :param qty: amount of the stock you would like to buy
-        :param type: type of trade to be made usually 'market'
-        :param time_in_force: how long an order will remain active before it is executed or expired
-        :param limit_price: limit price of the side if available
-        :return: True or False
-        """
-        try:
-            print("Sending order")
-            order_val = self.api.submit_order(
-                side=side,
-                qty=qty,
-                symbol=self.symbol,
-                type=type,
-                time_in_force=time_in_force,
-                limit_price=limit_price,
-            )
-            print(order_val)
-            return True
-        except Exception as e:
-            print("An exception occured - {}".format(e))
-            return False
 
     def on_open(self, ws):
         """
@@ -94,15 +67,16 @@ class AfkTrader:
         )
 
 
-if __name__ == "__main__":
+bot = AfkTrader(
+    base_url="https://paper-api.alpaca.markets",  # paper API
+    socket="wss://stream.data.alpaca.markets/v1beta1/crypto",  # crypto endpoint
+    api_key=get_secret_api_token(token_name="API_KEY_ID"),
+    api_secret=get_secret_api_token(token_name="API_SECRET"),
+    symbol="LTCUSD",
+)
 
-    bot = AfkTrader(
-        base_url="https://paper-api.alpaca.markets",  # paper API
-        socket="wss://stream.data.alpaca.markets/v1beta1/crypto",  # crypto endpoint
-        api_key=get_secret_api_token(token_name="API_KEY_ID"),
-        api_secret=get_secret_api_token(token_name="API_SECRET"),
-        symbol="BTCUSD",
-    )
+
+if __name__ == "__main__":
 
     ws = websocket.WebSocketApp(
         bot.socket,
