@@ -8,7 +8,7 @@ This architetcure was designed with crypto in mind. Which means this architectur
 ### Step 2:
 - Sign in to the AWS console
 - Go to the CloudFormation console
-- Deploy s3_infra.yml (you will have to change the BucketName in the .yml file to something unique before deployment)
+- Deploy s3_infra.yml ***(you will have to change the BucketName in the .yml file to something unique before deployment)***
 
 ### Step 3:
 - [Create an Alpaca account to receive your API keys](https://alpaca.markets/)
