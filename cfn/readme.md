@@ -24,7 +24,7 @@ This architetcure was designed with crypto in mind. Which means this architectur
 ### Step 6:
 - Sign in to the AWS console
 - Go to the S3 console
-- upload main.py to your Bucket
+- upload the src directory to your S3 Bucket
 
 ### Step 7:
 - Sign in to the AWS console
