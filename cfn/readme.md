@@ -19,7 +19,7 @@ This architetcure was designed with crypto in mind. Which means this architectur
   - Your API Secret Key should go on line 21 of infra.yml
 
 ### Step 5 (Optional):
-- Make any necessay changes to main.py as you see fit. If you'd like to implement your own trading strategy you can do so.
+- Make any necessay changes to main.py or strategies.py as you see fit. If you'd like to implement your own trading strategy you can do so.
 
 ### Step 6:
 - Sign in to the AWS console
