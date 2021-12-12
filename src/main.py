@@ -72,7 +72,7 @@ bot = AfkTrader(
     socket="wss://stream.data.alpaca.markets/v1beta1/crypto",  # crypto endpoint
     api_key=get_secret_api_token(token_name="API_KEY_ID"),
     api_secret=get_secret_api_token(token_name="API_SECRET"),
-    symbol="LTCUSD",
+    symbol="BTCUSD",
 )
 
 
