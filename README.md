@@ -11,7 +11,7 @@ An automated trading bot built on top of the Alpaca API. Completly hosted in the
 
  If you'd like to replicate this project head over to the readme.md in the cfn directory
  
- ### This is not financial advice. Only risk what you are willing to lose when participating in the stock market. The Maintainers of this repository are not responsible for your gains or losses when utilizing this bot.
+ ### This is not financial advice. Only risk what you are willing to lose when participating in the stock market. The Maintainer of this repository are not responsible for your gains or losses when utilizing this bot.
  
  
  ## Architecture
